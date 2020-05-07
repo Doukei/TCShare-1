@@ -1,4 +1,106 @@
 # 暂时停更
+安装教程（虚拟主机）
+应该会比readme详细点吧。
+
+整一个虚拟主机或者vps。需要php7，建议php7.3。有php7.4更好。
+
+下载代码。你可以直接git clone到空间里，也可以下载到本地。
+
+准备好composer。切换到程序目录，然后执行composer install。
+
+提醒x 如果你的服务器在国内，这里你可能需要设置一下国内镜像源：
+
+composer config repo.packagist composer https://mirrors.aliyun.com/composer/
+如果你是在本地安装的依赖，现在把程序包上传到服务器。
+
+设置伪静态规则：
+Nginx用户请完整填写以下规则。Apache用户可以无需理会，程序已经包含开箱即用的.htaccess文件。
+
+try_files $uri $uri/ /index.php$is_args$args;
+location ~ /\.env {
+    deny all;
+}
+创建.env文件，并按配置填写如下内容：
+
+#   XS 是前缀
+#   | -KEY 是配置种类，可选KEY，APP，SEC
+#   | | - -ct是key的ID（类似config.php）
+#   | | - | - something是配置名称
+#   | | - | - | - - - - value在等号右边
+#   XS_KEY_ct_something=value
+
+    XS_KEY_ct=ctyun   #必填，值为ctyun
+    XS_KEY_ct_FD=     #应用文件夹名
+    XS_KEY_ct_AK=     #AK
+    XS_KEY_ct_SK=     #SK
+
+#   这里APP后面的可以是任意值，一般就123456下去
+#          ↓
+    XS_APP_1=/              #挂载路径
+    XS_APP_1_NAME=TCShare   #网盘名称
+    XS_APP_1_THEME=mdui     #界面主题
+    XS_APP_1_BASE=/         #网盘内路径
+    XS_APP_1_KEY=ct         #对应上面Key的ID
+这里的AK、SK、FD需要你自己获取。
+
+如果你需要多盘挂载，你可以在上述配置之后继续追加：
+
+XS_KEY_ct2=ctyun   #必填，值为ctyun
+XS_KEY_ct2_FD=     #应用文件夹名
+XS_KEY_ct2_AK=     #AK
+XS_KEY_ct2_SK=     #SK
+
+XS_APP_2=/disk2         #挂载路径
+XS_APP_2_NAME=TCSecond  #网盘名称
+XS_APP_2_THEME=mdui     #界面主题
+XS_APP_2_BASE=/         #网盘内路径
+XS_APP_2_KEY=ct2        #对应上面Key的ID
+这里我们将第二个网盘挂载到/disk2，但是你只能通过/disk2访问。
+一个小技巧是：在第一个网盘里新建一个disk2文件夹，就能点击进入了。
+注意：除非你知道自己在做什么，不要把两个网盘挂载到相同路径。
+
+访问你的服务器地址，点击链接授权。
+
+如果你是多盘用户，请为你的每个网盘单独授权。
+如，先访问http://tcshare.website/授权第一个，再访问http://tcshare.website/disk2/授权第二个。
+如果您是按本文进行配置（且并非运行在SCF上），只需要登录账号就能完成授权。
+
+请每个月手动为每个网盘的token续期。如，你的网盘安装在http://tcshare.website/，你需要每个月访问一次http://tcshare.website/-renew。
+
+请不要使用计划任务访问，这不会起到任何作用。
+
+这就结束了。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## 请务必更新最新版 修复了一个可能导致越权读取文件夹的隐患
 # TCShare v3
 多云盘目录列表程序  
